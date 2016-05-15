@@ -70,7 +70,7 @@ module Spina
       theme_name = Spina::Account.first.theme
       if theme_name == 'demo' && !no?('Seed example content? [Yn]')
 
-        current_theme = ::Spina::Theme.find_by_name(theme_name)
+        current_theme = Spina::Theme.find_by_name(theme_name)
         if (page = Spina::Page.find_by(name: 'demo'))
           page.page_parts.clear
           parts = current_theme.page_parts.map { |page_part| page.page_part(page_part) }
