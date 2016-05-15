@@ -29,13 +29,13 @@ module Spina
     end
 
     def create_account
-      return if Account.exists? && !no?('An account already exists. Skip? [Yn]')
+      return if Spina::Account.exists? && !no?('An account already exists. Skip? [Yn]')
       name = ask('What would you like to name your website?')
-      account = Account.first_or_create.update_attribute(:name, name)
+      account = Spina::Account.first_or_create.update_attribute(:name, name)
     end
 
     def set_theme
-      account = Account.first
+      account = Spina::Account.first
       return if account.theme.present? && !no?("Theme '#{account.theme} is set. Skip? [Yn]")
 
       theme = begin
@@ -48,7 +48,7 @@ module Spina
 
     def copy_template_files
       return if Rails.env.production?
-      theme = Account.first.theme
+      theme = Spina::Account.first.theme
       template "config/initializers/themes/#{theme}.rb"
       directory "app/assets/stylesheets/#{theme}"
       directory "app/views/#{theme}"
@@ -56,10 +56,10 @@ module Spina
     end
 
     def create_user
-      return if User.exists? && !no?('A user already exists. Skip? [Yn]')
+      return if Spina::User.exists? && !no?('A user already exists. Skip? [Yn]')
       email = ask('Please enter an email address for your first user:')
       password = ask('Create a temporary password:', echo: false)
-      User.create name: 'admin', email: email, password: password, admin: true
+      Spina::User.create name: 'admin', email: email, password: password, admin: true
     end
 
     def bootstrap_spina
@@ -67,7 +67,7 @@ module Spina
     end
 
     def seed_demo_content
-      theme_name = Account.first.theme
+      theme_name = Spina::Account.first.theme
       if theme_name == 'demo' && !no?('Seed example content? [Yn]')
 
         current_theme = ::Spina::Theme.find_by_name(theme_name)
